@@ -25,7 +25,7 @@ class HomeView(View):
         else:
             exists = Url.objects.filter(hashed_url=hashed_url).first()
             if exists is not None:
-                print("Already exists!")
+                form.add_error("hashed_url", "Hash already exists!")
                 return render(request, self.template_name, {"form": form})
             else:
                 obj = Url.objects.create(url=url, hashed_url=hashed_url)
