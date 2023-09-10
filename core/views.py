@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.views import View
+from django.shortcuts import redirect
 
 from core.models import Url
 from core.forms import UrlForm
@@ -33,3 +34,10 @@ class HomeView(View):
         return render(
             request, self.template_name, {"short_url": obj.get_full_short_url()}
         )
+
+def redirect_url(request, hashed_url):
+    exists = Url.objects.filter(hashed_url=hashed_url).first()
+    if exists is not None:
+        return redirect(exists.url)
+    else:
+        return redirect("http://localhost:8000")
