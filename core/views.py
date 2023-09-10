@@ -23,7 +23,12 @@ class HomeView(View):
         if hashed_url is None:
             obj = Url.objects.create(url=url)
         else:
-            obj = Url.objects.create(url=url, hashed_url=hashed_url)
+            exists = Url.objects.filter(hashed_url=hashed_url).first()
+            if exists is not None:
+                print("Already exists!")
+                return render(request, self.template_name, {"form": form})
+            else:
+                obj = Url.objects.create(url=url, hashed_url=hashed_url)
 
         return render(
             request, self.template_name, {"short_url": obj.get_full_short_url()}
