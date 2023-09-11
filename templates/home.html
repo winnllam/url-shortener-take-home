@@ -54,6 +54,56 @@
         Create
       </button>
     </form>
+    <br />
+    <form method="post" class="flex flex-col justify-between">
+      <div class="flex flex-col w-full space-y-2">
+        <div class="w-full">
+          <input
+            id="rehash_url"
+            required
+            placeholder="URL to rehash"
+            value="{{ form.rehash_url.value }}"
+            type="text"
+            id="rehash_url"
+            name="rehash_url"
+            class="flex-1 mb-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          />
+          <span class="text-xs text-red-400">{{ form.rehash_url.errors }}</span>
+        </div>
+        <div class="w-full">
+          <input
+            required
+            maxlength="10"
+            placeholder="New hash"
+            value="{{ form.new_hash.value }}"
+            type="text"
+            id="new_hash"
+            name="new_hash"
+            class="flex-1 mb-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          />
+          <span class="text-xs text-red-400">{{ form.new_hash.errors }}</span>
+        </div>
+        <div class="w-full">
+          <input
+            required
+            maxlength="4"
+            placeholder="Pin (to edit hash)"
+            value="{{ form.pin.value }}"
+            type="text"
+            id="pin"
+            name="pin"
+            class="flex-1 mb-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          />
+          <span class="text-xs text-red-400">{{ form.pin.errors }}</span>
+        </div>
+      </div>
+      <button
+        type="submit"
+        class="transform hover:scale-110 transition duration-150 ease-in-out shadow-md flex font-bold mx-auto mt-8 border py-2 px-8 focus:outline-none hover:bg-gray-100 rounded text-xs"
+      >
+        Update
+      </button>
+    </form>
 
     {% if short_url %}
     <div
@@ -80,7 +130,9 @@
           >Go to page</a
         >
       </div>
+      {% if pin %}
       <div>Pin: {{pin}}</div>
+      {% endif %}
     </div>
     {% endif %}
   </div>
