@@ -43,12 +43,46 @@ class HomeView(View):
         )
 
     def patch(self, request, *args, **kwargs):
-        # STEPS REGARDING EDITING HASH:
+        # STEPS REGARDING EDITING HASH (assuming this function gets called correctly):
+        # check if url is valid
         # check if new hash is valid
-        # parse url to get old hash to search
+        # use url to get old hash to search
         # check if pin matches
         # replace the old hash with new hash either via delete and post or editing
-        return
+       
+        form = UrlForm(request.POST)
+        if not form.is_valid():
+            return render(request, self.template_name, {"form": form})
+
+        url = form.cleaned_data.get("rehash_url")
+        # get old hash value from url
+        old_hash = ""
+        try:
+            old_hash = url.rsplit('/', 1)[-1]
+        except IndexError:
+            form.add_error("rehash_url", "URL is not valid!")
+            return render(request, self.template_name, {"form": form})
+
+        hashed_url = form.cleaned_data.get("new_hash")
+        pin = form.cleaned_data.get("pin")
+
+        pattern = re.compile("^([a-zA-Z0-9\-\_])+$")
+
+        # check if new hash is valid
+        if pattern.match(hashed_url):
+            form.add_error("hashed_url", "Please make hash with alphanumeric values or - or _")
+            return render(request, self.template_name, {"form": form})
+        
+        # check if pin exists and matches
+        exists = Url.objects.filter(hashed_url=old_hash).first()
+        if exists is not None:
+            if pin == exists.pin:
+                # TODO: replace old hash with new hash
+                pass
+        else: 
+            form.add_error("rehash_url", "URL is not valid!")
+            return render(request, self.template_name, {"form": form})
+
 
 def redirect_url(request, hashed_url):
     exists = Url.objects.filter(hashed_url=hashed_url).first()
