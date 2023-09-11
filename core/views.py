@@ -25,7 +25,7 @@ class HomeView(View):
         obj = None
         pattern = re.compile("^([a-zA-Z0-9\-\_])+$")
 
-        if hashed_url is None:
+        if hashed_url is None or len(hashed_url) is 0:
             obj = Url.objects.create(url=url)
         elif not pattern.match(hashed_url):
             form.add_error("hashed_url", "Please make hash with alphanumeric values or - or _")
@@ -39,7 +39,7 @@ class HomeView(View):
                 obj = Url.objects.create(url=url, hashed_url=hashed_url)
 
         return render(
-            request, self.template_name, {"short_url": obj.get_full_short_url()}
+            request, self.template_name, {"short_url": obj.get_full_short_url(), "pin": obj.pin}
         )
 
 def redirect_url(request, hashed_url):
