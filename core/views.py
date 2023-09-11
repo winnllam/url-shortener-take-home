@@ -5,6 +5,8 @@ from django.shortcuts import redirect
 from core.models import Url
 from core.forms import UrlForm
 
+import re
+
 
 class HomeView(View):
     template_name = "home.html"
@@ -21,8 +23,13 @@ class HomeView(View):
         hashed_url = form.cleaned_data.get("hashed_url")
 
         obj = None
+        pattern = re.compile("^([a-zA-Z0-9\-\_])+$")
+
         if hashed_url is None:
             obj = Url.objects.create(url=url)
+        elif not pattern.match(hashed_url):
+            form.add_error("hashed_url", "Please make hash with alphanumeric values or - or _")
+            return render(request, self.template_name, {"form": form})
         else:
             exists = Url.objects.filter(hashed_url=hashed_url).first()
             if exists is not None:
