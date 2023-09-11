@@ -42,6 +42,14 @@ class HomeView(View):
             request, self.template_name, {"short_url": obj.get_full_short_url(), "pin": obj.pin}
         )
 
+    def patch(self, request, *args, **kwargs):
+        # STEPS REGARDING EDITING HASH:
+        # check if new hash is valid
+        # parse url to get old hash to search
+        # check if pin matches
+        # replace the old hash with new hash either via delete and post or editing
+        return
+
 def redirect_url(request, hashed_url):
     exists = Url.objects.filter(hashed_url=hashed_url).first()
     if exists is not None:
